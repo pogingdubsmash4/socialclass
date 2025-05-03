@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Profile of {{ user.username }}</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        /* Light/Dark Toggle Button */
+        .theme-toggle {
+            position: fixed;
+            top: 15px;
+            right: 15px;
+            z-index: 9999;
+        }
+
+        /* Dark Mode Styles */
+        body.dark-mode {
+            background-color: #121212 !important;
+            color: #f8f9fa !important;
+        }
+
+        body.dark-mode .card {
+            background-color: #1e1e1e !important;
+            color: #f8f9fa !important;
+        }
+
+        body.dark-mode .form-control {
+            background-color: #2c2c2c !important;
+            color: #f8f9fa !important;
+            border: 1px solid #444 !important;
+        }
+
+        body.dark-mode .btn-outline-primary {
+            color: #6ea4f3 !important;
+            border-color: #6ea4f3 !important;
+        }
+
+        body.dark-mode .btn-outline-danger {
+            color: #f17b7b !important;
+            border-color: #f17b7b !important;
+        }
+
+        body.dark-mode a {
+            color: #6ea4f3 !important;
+        }
+
+        body.dark-mode small.text-muted {
+            color: #bbb !important;
+        }
+    </style>
+</head>
+<body>
+<div class="container mt-5">
+    <div class="card mb-4">
+        <div class="card-body text-center">
+            {% if user.profile_pic %}
+                <img src="/uploads/{{ user.profile_pic }}" alt="Profile Pic" class="rounded-circle mb-3" width="100">
+            {% endif %}
+            <h2>👤 {{ user.username }}</h2>
+            <p><strong>Total Posts:</strong> {{ posts | length }}</p>
+            <p><strong>Total Likes:</strong> {{ total_likes }}</p>
+            <p><strong>Total Comments:</strong> {{ total_comments }}</p>
+        </div>
+    </div>
+
+    <h4>📜 Their Posts</h4>
+    {% if posts %}
+        {% for post in posts %}
+            <div class="card mb-3">
+                <div class="card-body">
+                    <p>{{ post.content }}</p>
+                    <small class="text-muted">{{ post.created_at.strftime('%Y-%m-%d %H:%M') }}</small>
+                </div>
+            </div>
+        {% endfor %}
+    {% else %}
+        <div class="alert alert-light">This user hasn't posted anything yet.</div>
+    {% endif %}
+
+    <div class="text-center mt-4">
+        <a href="/" class="btn btn-outline-primary">Back to Home</a>
+    </div>
+</div>
+
+<!-- Theme Toggle Button -->
+<button class="btn btn-secondary theme-toggle" onclick="toggleTheme()">🌓</button>
+
+<!-- JavaScript for Theme Toggle -->
+<script>
+    function toggleTheme() {
+        document.body.classList.toggle('dark-mode');
+        localStorage.setItem('darkMode', document.body.classList.contains('dark-mode'));
+    }
+
+    // Load saved theme
+    window.onload = () => {
+        if (localStorage.getItem('darkMode') === 'true' || 
+            (!('darkMode' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            document.body.classList.add('dark-mode');
+        }
+    };
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
